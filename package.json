@@ -1,0 +1,61 @@
+{
+  "name": "node-red-node-discord",
+  "author": {
+    "name": "Gago Muradyan"
+  },
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm run copyHtml && npm run copyIcons && tsc ",
+    "copyHtml": "mkdir -p dist/nodes/ && cp -a src/nodes/*.html dist/nodes/",
+    "copyIcons": "mkdir -p dist/nodes/icons && cp -a src/nodes/icons/. dist/nodes/icons",
+    "lint": "tslint --project ./",
+    "pretest": "tsc",
+    "prepublishOnly": "npm run build",
+    "preversion": "npm run lint",
+    "version" : "git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{src,e2e,cypress}/**/*.{ts,json,md,scss}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "bugs": {},
+  "bundleDependencies": [],
+  "deprecated": false,
+  "description": "Discord nodes for recieving / sending messages.",
+  "keywords": [
+    "node-red",
+    "discord"
+  ],
+  "license": "GPL-2.0",
+  "main": "dist/index.js",
+  "node-red": {
+    "nodes": {
+      "connect": "dist/nodes/connect.js",
+      "discord-get-messages": "dist/nodes/get-messages.js",
+      "discord-send-messages": "dist/nodes/send-messages.js"
+    }
+  },
+  "repository": {
+    "type": "git"
+  },
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.7",
+    "@types/node-red": "^0.20.0",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.3",
+    "prettier": "^1.19.1",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
+  }
+}

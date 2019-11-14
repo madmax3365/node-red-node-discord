@@ -1,0 +1,15 @@
+{
+	"extends": "tslint:recommended",
+	"rules": {
+		"max-line-length": {
+			"options": [120]
+		},
+		"quotemark": [true, "single", "avoid-escape"],
+		"indent": [true, "spaces", 4]
+	},
+	"jsRules": {
+		"max-line-length": {
+			"options": [120]
+		}
+	}
+}
