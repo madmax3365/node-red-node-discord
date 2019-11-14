@@ -3,7 +3,7 @@
   "author": {
     "name": "Gago Muradyan"
   },
-  "version": "1.0.1",
+  "version": "1.0.1.1",
   "scripts": {
     "build": "npm run copyHtml && npm run copyIcons && tsc ",
     "copyHtml": "mkdir -p dist/nodes/ && cp -a src/nodes/*.html dist/nodes/",

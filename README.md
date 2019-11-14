@@ -12,7 +12,7 @@ Run the following command in `~/.node-red`:
 
 # Nodes
 
-node-red-contrib-discord gives you access to two nodes:
+node-red-node-discord gives you access to two nodes:
 
 * discord-get-messages is a node with no inputs and one output allowing you to receive notifications of incoming messages.
 * discord-send-messages is a node with one input and no outputs allowing you to send messages to a Discord channel.
