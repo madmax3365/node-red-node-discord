@@ -8,7 +8,7 @@ Can be used to implement simple write/read Bots
 
 Run the following command in `~/.node-red`:
 
-    npm install node-red-contrib-discord
+    npm install node-red-node-discord
 
 # Nodes
 
