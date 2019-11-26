@@ -3,7 +3,7 @@
   "author": {
     "name": "Gago Muradyan"
   },
-  "version": "1.0.2",
+  "version": "2.0.0",
   "scripts": {
     "build": "npm run copyHtml && npm run copyIcons && tsc ",
     "copyHtml": "mkdir -p dist/nodes/ && cp -a src/nodes/*.html dist/nodes/",
@@ -12,7 +12,7 @@
     "pretest": "tsc",
     "prepublishOnly": "npm run build",
     "preversion": "npm run lint",
-    "version" : "git add -A src",
+    "version": "git add -A src",
     "postversion": "git push && git push --tags"
   },
   "husky": {
@@ -40,7 +40,8 @@
     "nodes": {
       "connect": "dist/nodes/connect.js",
       "discord-get-messages": "dist/nodes/get-messages.js",
-      "discord-send-messages": "dist/nodes/send-messages.js"
+      "discord-send-messages": "dist/nodes/send-messages.js",
+      "discord-members-monitoring": "dist/nodes/members-monitoring.js"
     }
   },
   "repository": {
@@ -50,9 +51,9 @@
     "discord.js": "^11.5.1"
   },
   "devDependencies": {
-    "@types/node": "^12.12.7",
+    "@types/node": "^12.12.14",
     "@types/node-red": "^0.20.0",
-    "husky": "^3.0.9",
+    "husky": "^3.1.0",
     "lint-staged": "^9.4.3",
     "prettier": "^1.19.1",
     "tslint": "^5.20.1",
