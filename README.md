@@ -12,10 +12,11 @@ Run the following command in `~/.node-red`:
 
 # Nodes
 
-node-red-node-discord gives you access to two nodes:
+node-red-node-discord gives you access to following nodes:
 
 * discord-get-messages is a node with no inputs and one output allowing you to receive notifications of incoming messages.
 * discord-send-messages is a node with one input and no outputs allowing you to send messages to a Discord channel.
+* discord-members-monitoring is a node with one input and output, designed to get all channels and their's members for metrics.
 
 ## discord-get-messages
 - Triggers whenever a message was received on Discord
@@ -57,5 +58,34 @@ node-red-node-discord gives you access to two nodes:
   {
      name: string;
      file: string | Buffer | Stream;
+  }
+  ```
+  
+  ## discord-members-monitoring
+  - Triggered from outside, for now doesn't provide any configuration options
+  - Set's monitored data to `msg.monitoringData` with following content
+  ```typescript
+  {
+  [category: string]: [
+  	{
+  	id: string;
+  	channelName: string;
+  	members: [
+  		{
+  		id: string;
+  		username: string;
+  		joinedDate: Date;
+  		permissions: PermissionString[];
+  		roles: [
+  			{
+   			id: string;
+  			name: string;
+  			permissions: number;
+  			}
+  			]
+  		}
+  		]
+  	}
+  	]
   }
   ```
