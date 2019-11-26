@@ -3,6 +3,10 @@
   "author": {
     "name": "Gago Muradyan"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madmax3365/node-red-node-discord.git"
+  },
   "version": "2.0.0",
   "scripts": {
     "build": "npm run copyHtml && npm run copyIcons && tsc ",
@@ -43,9 +47,6 @@
       "discord-send-messages": "dist/nodes/send-messages.js",
       "discord-members-monitoring": "dist/nodes/members-monitoring.js"
     }
-  },
-  "repository": {
-    "type": "git"
   },
   "dependencies": {
     "discord.js": "^11.5.1"
