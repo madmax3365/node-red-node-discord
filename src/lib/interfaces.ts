@@ -1,3 +1,4 @@
+import { Node, NodeProperties } from 'node-red';
 import { Stream } from 'stream';
 
 import {
@@ -9,8 +10,8 @@ import {
   Message,
   TextChannel,
   User,
+  PermissionString,
 } from 'discord.js';
-import { Node, NodeProperties } from 'node-red';
 
 export interface IConnectConfig extends Node {
   credentials: {
@@ -82,4 +83,28 @@ export interface IRichEmbedArgs {
   attachments?: Attachment[];
   text?: string;
   description?: string;
+}
+
+export interface IChannelMetric {
+  [id: string]: ITextChannelMetric[];
+}
+
+export interface ITextChannelMetric {
+  id: string;
+  channelName: string;
+  members: IMetricMemberItem[];
+}
+
+export interface IMetricRoleItem {
+  id: string;
+  name: string;
+  permissions: number;
+}
+
+export interface IMetricMemberItem {
+  id: string;
+  username: string;
+  joinedDate: Date;
+  permissions: PermissionString[];
+  roles: IMetricRoleItem[];
 }
