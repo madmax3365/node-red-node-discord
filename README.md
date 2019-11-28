@@ -42,16 +42,38 @@ node-red-node-discord gives you access to following nodes:
 - Feel free to **@mention** people in `message.payload` <br>
   **Example:** `Hello @Gago, nice module :)` , also you can use `@here, @everyone` mentions
 - To use discord's rich text embed specify `msg.rich` with following content (props marked with ? are not required)
-    ```typescript
-    {
-      title?: string;
-      author: {
-                name: string;
-                icon?: string;
-                url?: string;
-            };
-      description?: string;
-     }
+     ```typescript
+  {
+        title?: string;
+        description?: string;
+  	    url?: string;
+  	    color?: ColorResolvable;
+  	    timestamp?: number | Date;
+  	    footer?: {
+    	            icon?: string;
+    	            text: string;
+ 	              };
+  	    thumbnail?: string;
+  	    author: {
+   	              name: string;
+                  icon?: string;
+                  url?: string;
+                };
+
+  	    attachments?: Attachment[];
+  	    field?: {
+                  name: string;
+                  value: string;
+                  inline?: boolean;
+	              };
+  	    fields?: [
+                    {
+                      name: string;
+                      value: string;
+                      inline?: boolean;
+                    }
+	              ];
+  }
     ```
 - `msg.attachments` contains attachments to send, it must be array containing objects in format
   ```typescript

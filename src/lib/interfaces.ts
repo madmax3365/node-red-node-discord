@@ -11,6 +11,7 @@ import {
   TextChannel,
   User,
   PermissionString,
+  ColorResolvable,
 } from 'discord.js';
 
 export interface IConnectConfig extends Node {
@@ -75,14 +76,30 @@ export interface IMentionMap {
 
 export interface IRichEmbedArgs {
   title?: string;
+  description?: string;
+  url?: string;
+  color?: ColorResolvable;
+  timestamp?: number | Date;
+  footer?: {
+    icon?: string;
+    text: string;
+  };
+  thumbnail?: string;
   author: {
     name: string;
     icon?: string;
     url?: string;
   };
+
   attachments?: Attachment[];
-  text?: string;
-  description?: string;
+  field?: IRichEmbedField;
+  fields?: IRichEmbedField[];
+}
+
+interface IRichEmbedField {
+  name: string;
+  value: string;
+  inline?: boolean;
 }
 
 export interface IChannelMetric {

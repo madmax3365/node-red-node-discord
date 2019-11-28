@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/madmax3365/node-red-node-discord.git"
   },
-  "version": "2.0.0",
+  "version": "2.1.0",
   "scripts": {
     "build": "npm run copyHtml && npm run copyIcons && tsc ",
     "copyHtml": "mkdir -p dist/nodes/ && cp -a src/nodes/*.html dist/nodes/",

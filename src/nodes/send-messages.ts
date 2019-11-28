@@ -1,16 +1,16 @@
 import { Attachment, Channel, RichEmbed } from 'discord.js';
-import { Node, Red } from 'node-red';
-
 import { Bot } from '../lib/Bot';
 import { Embed } from '../lib/Embed';
+import { isEmbed, isNamedChannel } from '../lib/utils';
+import { Mentions } from '../lib/Mentions';
+import { Node, Red } from 'node-red';
+
 import {
   IBot,
   IConnectConfig,
   ISendMessageProps,
   IToDiscordChannel,
 } from '../lib/interfaces';
-import { Mentions } from '../lib/Mentions';
-import { isEmbed, isNamedChannel } from '../lib/utils';
 
 export = (RED: Red) => {
   RED.nodes.registerType('discord-send-messages', function(
@@ -47,16 +47,41 @@ export = (RED: Red) => {
                     attachments.push(new Attachment(file, name));
                   });
                 }
-                const mentionResolver = new Mentions(msg.payload, bot);
-                let outputMessage: string | RichEmbed =
-                  mentionResolver.formattedOutputMessage;
+                let outputMessage: string | RichEmbed;
                 if (msg.rich) {
-                  const { rich } = msg;
-                  rich.text = outputMessage;
-                  if (attachments && attachments.length > 0) {
-                    rich.attachments = attachments;
+                  const { description, fields } = msg.rich;
+                  if (description) {
+                    msg.rich.description = new Mentions(
+                      description,
+                      bot,
+                    ).formattedOutputMessage;
                   }
-                  outputMessage = Embed(rich);
+                  if (msg.rich.field) {
+                    msg.rich.field.value = new Mentions(
+                      msg.rich.field.value,
+                      bot,
+                    ).formattedOutputMessage;
+                  }
+                  if (fields) {
+                    msg.rich.fields = fields.map((field) => {
+                      field.value = new Mentions(
+                        field.value,
+                        bot,
+                      ).formattedOutputMessage;
+                      return field;
+                    });
+                  }
+                  if (
+                    attachments &&
+                    attachments.length > 0 &&
+                    !msg.rich.attachments
+                  ) {
+                    msg.rich.attachments = attachments;
+                  }
+                  outputMessage = Embed(msg.rich);
+                } else {
+                  outputMessage = new Mentions(msg.payload, bot)
+                    .formattedOutputMessage;
                 }
                 const finalMessage = isEmbed(outputMessage)
                   ? [outputMessage]
