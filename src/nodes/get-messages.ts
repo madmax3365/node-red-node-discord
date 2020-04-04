@@ -6,8 +6,8 @@ import {
   IBot,
   ICallback,
   IConnectConfig,
+  IDiscordChannelConfig,
   IFromDiscordMsg,
-  IGetMessageConfig,
   NamedChannel,
 } from '../lib/interfaces';
 import { Mentions } from '../lib/Mentions';
@@ -15,7 +15,7 @@ import { Mentions } from '../lib/Mentions';
 export = (RED: Red) => {
   RED.nodes.registerType('discord-get-messages', function(
     this: Node,
-    props: IGetMessageConfig,
+    props: IDiscordChannelConfig,
   ) {
     RED.nodes.createNode(this, props);
     const configNode = RED.nodes.getNode(props.token) as IConnectConfig;

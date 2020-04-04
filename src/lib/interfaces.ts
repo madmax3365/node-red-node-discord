@@ -21,12 +21,7 @@ export interface IConnectConfig extends Node {
   token?: string;
 }
 
-export interface IGetMessageConfig extends Node {
-  token: string;
-  channels: string;
-}
-
-export interface IGetEmojiReactionsConfig extends Node {
+export interface IDiscordChannelConfig extends Node {
   token: string;
   channels: string;
 }

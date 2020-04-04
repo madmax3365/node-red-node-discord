@@ -6,8 +6,8 @@ import {
   IBot,
   ICallback,
   IConnectConfig,
+  IDiscordChannelConfig,
   IFromDiscordMsg,
-  IGetEmojiReactionsConfig,
   NamedChannel,
 } from '../lib/interfaces';
 import { Reactions } from '../lib/Reactions';
@@ -15,7 +15,7 @@ import { Reactions } from '../lib/Reactions';
 export = (RED: Red) => {
   RED.nodes.registerType('discord-get-emoji-reactions', function(
     this: Node,
-    props: IGetEmojiReactionsConfig,
+    props: IDiscordChannelConfig,
   ) {
     RED.nodes.createNode(this, props);
     const configNode = RED.nodes.getNode(props.token) as IConnectConfig;
