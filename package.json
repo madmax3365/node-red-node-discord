@@ -44,12 +44,14 @@
     "nodes": {
       "connect": "dist/nodes/connect.js",
       "discord-get-messages": "dist/nodes/get-messages.js",
+      "discord-get-emoji-reactions": "dist/nodes/get-emoji-reactions.js",
       "discord-send-messages": "dist/nodes/send-messages.js",
       "discord-members-monitoring": "dist/nodes/members-monitoring.js"
     }
   },
   "dependencies": {
-    "discord.js": "^11.5.1"
+    "discord.js": "^11.5.1",
+    "flatted": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.14",
