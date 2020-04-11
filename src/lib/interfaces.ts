@@ -26,6 +26,17 @@ export interface IDiscordChannelConfig extends Node {
   channels: string;
 }
 
+export interface IGetMemberRoleConfig extends Node {
+  token: string;
+  serverId: string;
+  roleId: string;
+}
+
+export interface IMessageWithUserId {
+  payload: string;
+  topic: string;
+}
+
 export interface ISendMessageProps extends NodeProperties {
   token: string;
   channel: string;

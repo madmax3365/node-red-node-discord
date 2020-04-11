@@ -45,6 +45,7 @@
       "connect": "dist/nodes/connect.js",
       "discord-get-messages": "dist/nodes/get-messages.js",
       "discord-get-emoji-reactions": "dist/nodes/get-emoji-reactions.js",
+      "discord-get-member-role": "dist/nodes/get-member-role.js",
       "discord-send-messages": "dist/nodes/send-messages.js",
       "discord-members-monitoring": "dist/nodes/members-monitoring.js"
     }
