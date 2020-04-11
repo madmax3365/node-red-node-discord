@@ -1,0 +1,42 @@
+<script type="text/javascript">
+  RED.nodes.registerType('discord-get-member-role', {
+    category: 'discord',
+    color: '#7289da',
+    defaults: {
+      name: { value: '', required: false },
+      token: { value: '', required: true, type: 'discord-token' },
+      roleId: { value: '', required: true },
+      serverId: { value: '', required: true},
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'discord.png',
+    label: function() {
+      return this.name || 'Get member role';
+    },
+  });
+</script>
+<script type="text/x-red" data-template-name="discord-get-member-role">
+	<div class="form-row">
+	    <label for="node-input-token"><i class="icon-tag"></i> token</label>
+	    <input type="text" id="node-input-token" placeholder="token">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+	    <input type="text" id="node-input-name" placeholder="Name">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-roleId"><i class="icon-tag"></i>Role IDs</label>
+	    <input type="text" id="node-input-roleId" placeholder="#12341 #45452334 #1234">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-serverId"><i class="icon-tag"></i>Server ID</label>
+	    <input type="text" id="node-input-serverId" placeholder="81384788765712384">
+	</div>
+</script>
+<script type="text/x-red" data-help-name="discord-get-member-role">
+	<p>Used to determine whether or not the user ID which has been passed via the msg.payload has one of the roles specified.</p>
+	<p>You can pass list of roles to check</p>
+	<p><em>Note</em> valid role list example <code>#659518696506785802#681296328956968983</code></p>
+	<p><code>msg.payload</code> will be set to TRUE if user is one of the roles otherwise FALSE.</p>
+</script>
