@@ -34,7 +34,6 @@ export = (RED: Red) => {
     this.on('input', (msg: IMessageWithUserId, send, done) => {
       node.status({ fill: 'green', shape: 'dot', text: 'ready' });
       const userId = msg.topic;
-
       if (token) {
         botInstance
           .get(token)

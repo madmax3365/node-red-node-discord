@@ -1,4 +1,4 @@
-import { MessageReaction, Role, User } from 'discord.js';
+import { MessageReaction, User } from 'discord.js';
 import { Node, Red } from 'node-red';
 
 import { Bot } from '../lib/Bot';
@@ -7,7 +7,7 @@ import {
   ICallback,
   IConnectConfig,
   IDiscordChannelConfig,
-  IFromDiscordMsg,
+  IMessageReaction,
   NamedChannel,
 } from '../lib/interfaces';
 import { Reactions } from '../lib/Reactions';
@@ -46,8 +46,8 @@ export = (RED: Red) => {
           };
           registerCallback(
             'messageReactionAdd',
-            async (reaction: MessageReaction, user: User) => {
-              let processingAllowed = !!!channels.length;
+            (reaction: MessageReaction, user: User) => {
+              let processingAllowed = !channels.length;
               const message = reaction.message;
               if (!processingAllowed) {
                 if (message.channel.type.trim() !== 'dm') {
@@ -61,19 +61,23 @@ export = (RED: Red) => {
               }
               if (message.author !== bot.user && processingAllowed) {
                 const msgid = RED.util.generateId();
-                const msg = { _msgid: msgid } as IFromDiscordMsg;
+                const msg = { _msgid: msgid } as IMessageReaction;
                 const msgReaction = new Reactions(reaction, user);
                 msg.payload = msgReaction.formatPayloadMessage;
                 msg.channel = message.channel;
-                msg.author = message.author;
                 msg.member = message.member;
-                msg.memberRoleNames = message.member
-                  ? message.member.roles.array().map((item: Role) => {
-                      return item.name;
-                    })
-                  : null;
-                msg.rawData = message;
-                node.send(msg);
+                msg.topic = message.member.user.id;
+                try {
+                  node.send(msg);
+                } catch (e) {
+                  node.error(e);
+                }
+                // for saving member role names
+                // msg.memberRoleNames = message.member
+                //   ? message.member.roles.array().map((item: Role) => {
+                //       return item.name;
+                //     })
+                //   : null;
               }
             },
           );
@@ -89,6 +93,8 @@ export = (RED: Red) => {
           });
         })
         .catch((err: Error) => {
+          // tslint:disable-next-line:no-console
+          console.log('PROMISE ERROR', 'HOPEFULLY STOPPING ISSUES');
           node.error(err);
           node.send(configNode);
           node.status({ fill: 'red', shape: 'dot', text: 'wrong token?' });
