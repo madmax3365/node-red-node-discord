@@ -47,7 +47,8 @@
       "discord-get-emoji-reactions": "dist/nodes/get-emoji-reactions.js",
       "discord-get-member-role": "dist/nodes/get-member-role.js",
       "discord-send-messages": "dist/nodes/send-messages.js",
-      "discord-members-monitoring": "dist/nodes/members-monitoring.js"
+      "discord-members-monitoring": "dist/nodes/members-monitoring.js",
+      "discord-delete-wrong-message": "dist/nodes/delete-wrong-message.js"
     }
   },
   "dependencies": {
