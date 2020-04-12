@@ -32,7 +32,19 @@ export interface IGetMemberRoleConfig extends Node {
   roleId: string;
 }
 
+export interface IDeleteWrongMessageConfig extends Node {
+  token: string;
+  channels: string;
+  serverId: string;
+  message: string;
+}
+
 export interface IMessageWithUserId {
+  payload: string;
+  topic: string;
+}
+
+export interface IDeleteWrongMessage {
   payload: string;
   topic: string;
 }
