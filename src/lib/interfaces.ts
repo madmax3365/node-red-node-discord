@@ -64,6 +64,15 @@ export interface IFromDiscordMsg {
   rawData?: Message;
 }
 
+export interface IMessageReaction {
+  _msgid: string;
+  payload: string;
+  topic: string;
+  channel: NamedChannel | DMChannel;
+  member: GuildMember;
+  memberRoleNames: string[] | null;
+}
+
 export interface IFile {
   filename: string;
   href: string;

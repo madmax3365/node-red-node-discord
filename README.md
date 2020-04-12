@@ -111,3 +111,13 @@ node-red-node-discord gives you access to following nodes:
   	]
   }
   ```
+
+# Troubleshooting
+
+Here is some known issues and workarounds for them
+
+**UnhandledPromiseRejectionWarning: TypeError: Cannot assign to read only property 'writeQueueSize' of object '#<TCP>'**
+
+Outgoing node message has a TCP stream which can't be cloned. This needs to be fixed in a future release but for now you can 
+avoid the issue by ensuring the output from the node isn't branched (going to multiple nodes).
+
