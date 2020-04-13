@@ -6,7 +6,7 @@ import {
   IBot,
   ICallback,
   IConnectConfig,
-  IDiscordChannelConfig,
+  IGetEmojiReactionsConfig,
   IMessageReaction,
   NamedChannel,
 } from '../lib/interfaces';
@@ -15,7 +15,7 @@ import { Reactions } from '../lib/Reactions';
 export = (RED: Red) => {
   RED.nodes.registerType('discord-get-emoji-reactions', function(
     this: Node,
-    props: IDiscordChannelConfig,
+    props: IGetEmojiReactionsConfig,
   ) {
     RED.nodes.createNode(this, props);
     const configNode = RED.nodes.getNode(props.token) as IConnectConfig;
@@ -47,6 +47,10 @@ export = (RED: Red) => {
           registerCallback(
             'messageReactionAdd',
             (reaction: MessageReaction, user: User) => {
+              // tslint:disable-next-line:no-console
+              console.log('MESSAGE REACTION', reaction);
+              // tslint:disable-next-line:no-console
+              console.log('USER', user);
               let processingAllowed = !channels.length;
               const message = reaction.message;
               if (!processingAllowed) {
@@ -59,6 +63,7 @@ export = (RED: Red) => {
                   }
                 }
               }
+              const requiredMessage = props.message;
               if (message.author !== bot.user && processingAllowed) {
                 const msgid = RED.util.generateId();
                 const msg = { _msgid: msgid } as IMessageReaction;
@@ -66,11 +71,15 @@ export = (RED: Red) => {
                 msg.payload = msgReaction.formatPayloadMessage;
                 msg.channel = message.channel;
                 msg.member = message.member;
+                // message senders user id
                 msg.topic = message.member.user.id;
-                try {
+                if (
+                  requiredMessage != null &&
+                  message.content === requiredMessage
+                ) {
                   node.send(msg);
-                } catch (e) {
-                  node.error(e);
+                } else {
+                  node.send(msg);
                 }
                 // for saving member role names
                 // msg.memberRoleNames = message.member
