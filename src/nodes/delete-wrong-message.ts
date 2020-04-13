@@ -23,8 +23,13 @@ export = (RED: Red) => {
     // @ts-ignore
     this.on('input', (msg: IFromDiscordMsg, send, done) => {
       node.status({ fill: 'green', shape: 'dot', text: 'ready' });
-      // tslint:disable-next-line:no-console
-      console.log('DELETE WRONG MESSAGE', msg.rawData);
+      if (msg.rawData != null) {
+        // tslint:disable-next-line:no-console
+        console.log('DELETE WRONG MESSAGE', msg.rawData.channel.lastMessageID);
+      } else {
+        // tslint:disable-next-line:no-console
+        console.log('DELETE WRONG MESSAGE', msg.rawData);
+      }
       if (msg.payload === messageToMatch) {
         // tslint:disable-next-line:no-console
         console.log(
@@ -37,6 +42,7 @@ export = (RED: Red) => {
           'DELETE WRONG MESSAGE',
           'Invalid message!\n' + msg.payload + '\n' + messageToMatch,
         );
+        msg.rawData?.delete();
       }
       if (token) {
         botInstance
