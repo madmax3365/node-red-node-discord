@@ -73,6 +73,7 @@ export = (RED: Red) => {
                 msg.member = message.member;
                 // message senders user id
                 msg.topic = message.member.user.id;
+                msg.reactionUser = user;
                 if (
                   requiredMessage != null &&
                   message.content === requiredMessage
