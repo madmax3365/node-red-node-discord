@@ -1,0 +1,47 @@
+<script type="text/javascript">
+  RED.nodes.registerType('discord-should-assign-role', {
+    category: 'discord',
+    color: '#7289da',
+    defaults: {
+      name: { value: '', required: false },
+      token: { value: '', required: true, type: 'discord-token' },
+      role: { value: '', required: true },
+      reviewer: { value: '', required: true },
+      serverId: { value: '', required: true},
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'discord.png',
+    label: function() {
+      return this.name || 'Should assign role';
+    },
+  });
+</script>
+<script type="text/x-red" data-template-name="discord-should-assign-role">
+	<div class="form-row">
+	    <label for="node-input-token"><i class="icon-tag"></i>Token</label>
+	    <input type="text" id="node-input-token" placeholder="token">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-name"><i class="icon-tag"></i>Name</label>
+	    <input type="text" id="node-input-name" placeholder="Name">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-role"><i class="icon-tag"></i>Role to Assign</label>
+	    <input type="text" id="node-input-role" placeholder="659518696506785802">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-reviewer"><i class="icon-tag"></i>Reviewer Role</label>
+	    <input type="text" id="node-input-reviewer" placeholder="695672485269602424">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-serverId"><i class="icon-tag"></i>Server ID</label>
+	    <input type="text" id="node-input-serverId" placeholder="81384788765712384">
+	</div>
+</script>
+<script type="text/x-red" data-help-name="discord-should-assign-role">
+	<p>To be used after <code>get emoji reaction</code> node to determine whether or not the user who sent the message should be promoted
+	to a new role.</p>
+	<p>Role to Assign is the role which will be given to the user providing they have received an emoji reaction from a user with the role id specified in Reviewer Role</p>
+	<p><em>Note</em> valid role example <code>695672485269602424</code></p>
+</script>

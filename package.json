@@ -49,7 +49,8 @@
       "discord-send-messages": "dist/nodes/send-messages.js",
       "discord-members-monitoring": "dist/nodes/members-monitoring.js",
       "discord-delete-invalid-message": "dist/nodes/delete-invalid-message.js",
-      "discord-reply-direct-message": "dist/nodes/reply-direct-message.js"
+      "discord-reply-direct-message": "dist/nodes/reply-direct-message.js",
+      "discord-should-assign-role": "dist/nodes/should-assign-role.js"
     }
   },
   "dependencies": {
