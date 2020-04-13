@@ -85,6 +85,13 @@ export interface IMessageReaction {
   memberRoleNames: string[] | null;
 }
 
+export interface IDeleteMessageResponse {
+  _msgid: string;
+  payload: string;
+  member: GuildMember;
+  memberRoleNames: string[] | null;
+}
+
 export interface IFile {
   filename: string;
   href: string;

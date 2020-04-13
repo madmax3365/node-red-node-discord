@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  RED.nodes.registerType('discord-delete-wrong-message', {
+  RED.nodes.registerType('discord-reply-direct-message', {
     category: 'discord',
     color: '#7289da',
     defaults: {
@@ -11,11 +11,11 @@
     outputs: 1,
     icon: 'discord.png',
     label: function() {
-      return this.name || 'Delete wrong message';
+      return this.name || 'Reply with direct message';
     },
   });
 </script>
-<script type="text/x-red" data-template-name="discord-delete-wrong-message">
+<script type="text/x-red" data-template-name="discord-reply-direct-message">
 	<div class="form-row">
 	    <label for="node-input-token"><i class="icon-tag"></i>Token</label>
 	    <input type="text" id="node-input-token" placeholder="token">
@@ -26,10 +26,10 @@
 	</div>
 	<div class="form-row">
 	    <label for="node-input-message"><i class="icon-tag"></i>Message</label>
-	    <input type="text" id="node-input-message" placeholder="!apply I have read the terms and conditions">
+	    <input type="text" id="node-input-message" placeholder="Hey there! Please refrain from swearing in our community.">
 	</div>
 </script>
-<script type="text/x-red" data-help-name="discord-delete-wrong-message">
-	<p>Used ensure that only the message specified will be allowed in the channel otherwise it will be deleted.</p>
-	<p><em>Note</em> valid channel list example <code>#659518696506785802#681296328956968983</code></p>
+<script type="text/x-red" data-help-name="discord-reply-direct-message">
+	<p>Used to reply to a user's message in a direct message.</p>
+	<p>The reply which will be sent will be the string supplied to <code>Message</code>.</p>
 </script>
