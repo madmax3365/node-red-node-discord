@@ -26,6 +26,12 @@ export interface IDiscordChannelConfig extends Node {
   channels: string;
 }
 
+export interface IGetEmojiReactionsConfig extends Node {
+  token: string;
+  channels: string;
+  message: string;
+}
+
 export interface IGetMemberRoleConfig extends Node {
   token: string;
   serverId: string;
@@ -82,7 +88,6 @@ export interface IMessageReaction {
   topic: string;
   channel: NamedChannel | DMChannel;
   member: GuildMember;
-  memberRoleNames: string[] | null;
 }
 
 export interface IDeleteMessageResponse {
