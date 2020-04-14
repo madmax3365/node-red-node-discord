@@ -1,0 +1,30 @@
+<script type="text/javascript">
+  RED.nodes.registerType('discord-assign-role', {
+    category: 'discord',
+    color: '#7289da',
+    defaults: {
+      name: { value: '', required: false },
+      token: { value: '', required: true, type: 'discord-token' },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'discord.png',
+    label: function() {
+      return this.name || 'Assign role';
+    },
+  });
+</script>
+<script type="text/x-red" data-template-name="discord-assign-role">
+	<div class="form-row">
+	    <label for="node-input-token"><i class="icon-tag"></i>Token</label>
+	    <input type="text" id="node-input-token" placeholder="token">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-name"><i class="icon-tag"></i>Name</label>
+	    <input type="text" id="node-input-name" placeholder="Name">
+	</div>
+</script>
+<script type="text/x-red" data-help-name="discord-assign-role">
+	<p>To be used to assign a new role to the user.</p>
+	<p>For this node to work, you need to pass <code>GuildMember</code> to <code>msg.member</code> and the role ID which you wish to assign to <code>msg.roleId</code>.</p>
+</script>
