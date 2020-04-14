@@ -47,16 +47,15 @@ export = (RED: Red) => {
           registerCallback(
             'messageReactionAdd',
             (reaction: MessageReaction, user: User) => {
-              // tslint:disable-next-line:no-console
-              console.log('MESSAGE REACTION', reaction);
-              // tslint:disable-next-line:no-console
-              console.log('USER', user);
               let processingAllowed = !channels.length;
               const message = reaction.message;
               if (!processingAllowed) {
                 if (message.channel.type.trim() !== 'dm') {
                   const channel = message.channel as NamedChannel;
-                  if (!channels.includes(channel.name)) {
+                  if (
+                    !channels.includes(channel.name) &&
+                    !channels.includes(channel.id)
+                  ) {
                     processingAllowed = false;
                   } else {
                     processingAllowed = true;
@@ -74,6 +73,7 @@ export = (RED: Red) => {
                 // message senders user id
                 msg.topic = message.member.user.id;
                 msg.reactionUser = user;
+                msg.messageReaction = reaction;
                 if (
                   requiredMessage != null &&
                   message.content === requiredMessage
