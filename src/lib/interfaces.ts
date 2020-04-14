@@ -113,6 +113,12 @@ export interface IShouldAssignRoleResponse {
   roleId: string;
 }
 
+export interface IAssignRoleResponse {
+  _msgid: string;
+  payload: string;
+  member: GuildMember;
+}
+
 export interface IFile {
   filename: string;
   href: string;

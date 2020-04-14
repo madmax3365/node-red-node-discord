@@ -21,7 +21,6 @@ export = (RED: Red) => {
     // @ts-ignore
     this.on('input', (msg: IMessageReaction, send, done) => {
       node.status({ fill: 'green', shape: 'dot', text: 'ready' });
-
       const reviewerRoleId = props.reviewer;
       const roleIdToAssign = props.role;
       const serverId = props.serverId;
