@@ -96,6 +96,7 @@ export interface IMessageReaction {
   channel: NamedChannel | DMChannel;
   member: GuildMember;
   reactionUser: User;
+  messageReaction: MessageReaction;
 }
 
 export interface IDeleteMessageResponse {
