@@ -54,7 +54,7 @@ export class MemberMonitor {
         });
         channelMetric.members.push(memberMetric);
       });
-      const category = channel.parent.name;
+      const category = channel.parent ? channel.parent.name : '';
       if (result[category]) {
         result[category].push(channelMetric);
       } else {
