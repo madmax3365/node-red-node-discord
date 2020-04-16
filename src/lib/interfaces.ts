@@ -1,18 +1,18 @@
-import { Node, NodeProperties } from 'node-red';
-import { Stream } from 'stream';
-
 import {
   Attachment,
   Client,
+  ColorResolvable,
   DMChannel,
   GroupDMChannel,
   GuildMember,
   Message,
+  MessageReaction,
+  PermissionString,
   TextChannel,
   User,
-  PermissionString,
-  ColorResolvable,
 } from 'discord.js';
+import { Node, NodeProperties } from 'node-red';
+import { Stream } from 'stream';
 
 export interface IConnectConfig extends Node {
   credentials: {
@@ -21,7 +21,7 @@ export interface IConnectConfig extends Node {
   token?: string;
 }
 
-export interface IGetMessageConfig extends Node {
+export interface IDiscordChannelConfig extends Node {
   token: string;
   channels: string;
 }
@@ -39,6 +39,7 @@ export interface ICallback {
   event: string;
   listener: (param: any) => void;
 }
+
 export type NamedChannel = TextChannel | GroupDMChannel;
 
 export interface IFromDiscordMsg {
@@ -124,4 +125,9 @@ export interface IMetricMemberItem {
   joinedDate: Date;
   permissions: PermissionString[];
   roles: IMetricRoleItem[];
+}
+
+export interface IReactionsMap {
+  reaction: MessageReaction;
+  user: User;
 }

@@ -1,0 +1,40 @@
+<script type="text/javascript">
+	RED.nodes.registerType('discord-get-emoji-reactions', {
+		category: 'discord',
+		color: '#7289da',
+		defaults: {
+			name: { value: '', required: false },
+			token: { value: '', required: true, type: 'discord-token' },
+			channels: { value: '', required: false },
+		},
+		inputs: 0,
+		outputs: 1,
+		icon: 'discord.png',
+		label: function() {
+			return this.name || 'Get emoji reactions';
+		},
+	});
+</script>
+<script type="text/x-red" data-template-name="discord-get-emoji-reactions">
+	<div class="form-row">
+	    <label for="node-input-token"><i class="icon-tag"></i> token</label>
+	    <input type="text" id="node-input-token" placeholder="token">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+	    <input type="text" id="node-input-name" placeholder="Name">
+	</div>
+	<div class="form-row">
+	    <label for="node-input-channels"><i class="icon-tag"></i>Channels to listen</label>
+	    <input type="text" id="node-input-channels" placeholder="#12341 #45452334 #1234">
+	</div>
+</script>
+<script type="text/x-red" data-help-name="discord-get-emoji-reactions">
+	<p>Triggers whenever an emoji reaction was received on a message on Discord.</p>
+	<p>You can pass list of channels to listen to</p>
+	<p><em>Note</em> valid channel list example <code>#1245#general#1234567#another-channel</code></p>
+	<p><code>msg.payload</code> will be set to an Object containing both info on <a href="https://discord.js.org/#/docs/main/stable/class/MessageReaction" target="_blank">reaction</a> and <a href="https://discord.js.org/#/docs/main/stable/class/User" target="_blank">user</a> which gave the reaction.</p>
+	<p><code>msg.channel</code> will be set to an Object containing info on the <a href="https://discord.js.org/#/docs/main/stable/class/Channel" target="_blank">channel</a> the message was received from (does not contain any discord.js functions)</p>
+	<p><code>msg.author</code> will be set to an Object containing info on the <a href="https://discord.js.org/#/docs/main/stable/class/User" target="_blank">user</a> that sent the message (does not contain any discord.js functions)</p>
+	<p><code>msg.rawData</code> <em>may</em> be set to an Object containing info on the <a href="https://discord.js.org/#/docs/main/stable/class/Message" target="_blank">message</a> that was received, but again without any of the discord.js functions.</p>
+</script>

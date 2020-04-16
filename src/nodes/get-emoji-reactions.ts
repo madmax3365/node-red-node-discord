@@ -1,4 +1,4 @@
-import { Message, Role } from 'discord.js';
+import { MessageReaction, Role, User } from 'discord.js';
 import { Node, Red } from 'node-red';
 
 import { Bot } from '../lib/Bot';
@@ -10,10 +10,10 @@ import {
   IFromDiscordMsg,
   NamedChannel,
 } from '../lib/interfaces';
-import { Mentions } from '../lib/Mentions';
+import { Reactions } from '../lib/Reactions';
 
 export = (RED: Red) => {
-  RED.nodes.registerType('discord-get-messages', function(
+  RED.nodes.registerType('discord-get-emoji-reactions', function(
     this: Node,
     props: IDiscordChannelConfig,
   ) {
@@ -39,47 +39,44 @@ export = (RED: Red) => {
 
           const registerCallback = (
             event: string,
-            listener: (param: any) => void,
+            listener: (param?: any, param2?: any) => void,
           ) => {
             callbacks.push({ event, listener });
             bot.on(event, listener);
           };
-          registerCallback('message', (message: Message) => {
-            let processingAllowed = !!!channels.length;
-            if (!processingAllowed) {
-              if (message.channel.type.trim() !== 'dm') {
-                const channel = message.channel as NamedChannel;
-                if (!channels.includes(channel.name)) {
-                  processingAllowed = false;
-                } else {
-                  processingAllowed = true;
+          registerCallback(
+            'messageReactionAdd',
+            async (reaction: MessageReaction, user: User) => {
+              let processingAllowed = !!!channels.length;
+              const message = reaction.message;
+              if (!processingAllowed) {
+                if (message.channel.type.trim() !== 'dm') {
+                  const channel = message.channel as NamedChannel;
+                  if (!channels.includes(channel.name)) {
+                    processingAllowed = false;
+                  } else {
+                    processingAllowed = true;
+                  }
                 }
               }
-            }
-            if (message.author !== bot.user && processingAllowed) {
-              const msgid = RED.util.generateId();
-              const msg = { _msgid: msgid } as IFromDiscordMsg;
-              const attachments = message.attachments;
-              if (attachments) {
-                msg.attachments = attachments.array().map((item) => ({
-                  filename: item.filename,
-                  href: item.url,
-                }));
+              if (message.author !== bot.user && processingAllowed) {
+                const msgid = RED.util.generateId();
+                const msg = { _msgid: msgid } as IFromDiscordMsg;
+                const msgReaction = new Reactions(reaction, user);
+                msg.payload = msgReaction.formatPayloadMessage;
+                msg.channel = message.channel;
+                msg.author = message.author;
+                msg.member = message.member;
+                msg.memberRoleNames = message.member
+                  ? message.member.roles.array().map((item: Role) => {
+                      return item.name;
+                    })
+                  : null;
+                msg.rawData = message;
+                node.send(msg);
               }
-              const mentionResolver = new Mentions(message.content, bot);
-              msg.payload = mentionResolver.formattedInputMessage;
-              msg.channel = message.channel;
-              msg.author = message.author;
-              msg.member = message.member;
-              msg.memberRoleNames = message.member
-                ? message.member.roles.array().map((item: Role) => {
-                    return item.name;
-                  })
-                : null;
-              msg.rawData = message;
-              node.send(msg);
-            }
-          });
+            },
+          );
           registerCallback('error', (error: Error) => {
             node.error(error);
             node.status({ fill: 'red', shape: 'dot', text: 'error' });

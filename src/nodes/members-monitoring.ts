@@ -3,7 +3,7 @@ import { Bot } from '../lib/Bot';
 import {
   IBot,
   IConnectConfig,
-  IGetMessageConfig,
+  IDiscordChannelConfig,
   IToDiscordChannel,
 } from '../lib/interfaces';
 import { MemberMonitor } from '../lib/MemberMonitor';
@@ -12,7 +12,7 @@ import { MemberMonitor } from '../lib/MemberMonitor';
 export = (RED: Red) => {
   RED.nodes.registerType('discord-monitor-members', function(
     this: Node,
-    props: IGetMessageConfig,
+    props: IDiscordChannelConfig,
   ) {
     const node = this;
     RED.nodes.createNode(node, props);
