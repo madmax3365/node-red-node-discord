@@ -18,8 +18,8 @@ export = (RED: Red) => {
       node.status({ fill: 'green', shape: 'dot', text: 'ready' });
       const msgid = RED.util.generateId();
       const message = { _msgid: msgid } as IDeleteMessageResponse;
-      message.member = msg.member;
-      if (msg.payload === messageToMatch) {
+      const messageReceived: string = msg.payload;
+      if (messageReceived.startsWith(messageToMatch)) {
         message.payload = 'Valid message';
       } else {
         msg.rawData?.delete();
