@@ -15,6 +15,7 @@ Run the following command in `~/.node-red`:
 node-red-node-discord gives you access to following nodes:
 
 * discord-get-messages is a node with no inputs and one output allowing you to receive notifications of incoming messages.
+* discord-get-emoji-reactions is a node with no inputs and one output allowing you to receive notifications when user reacts on message with emoji.
 * discord-send-messages is a node with one input and no outputs allowing you to send messages to a Discord channel.
 * discord-members-monitoring is a node with one input and output, designed to get all channels and their's members for metrics.
 
