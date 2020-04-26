@@ -12,7 +12,7 @@ export = (RED: Red) => {
     },
     {
       credentials: {
-        token: { type: 'text' },
+        token: { type: 'password' },
       },
     },
   );
