@@ -17,7 +17,14 @@ export = (RED: Red) => {
     this.on('input', (msg: IFromDiscordMsg, send, done) => {
       node.status({ fill: 'green', shape: 'dot', text: 'ready' });
       const msgid = RED.util.generateId();
-      const message = { _msgid: msgid } as IDeleteMessageResponse;
+
+      const message: IDeleteMessageResponse = {
+        _msgid: msgid,
+        member: msg.member,
+        memberRoleNames: msg.memberRoleNames,
+        payload: '',
+      };
+
       const messageReceived: string = msg.payload;
       if (messageReceived.startsWith(messageToMatch)) {
         message.payload = 'Valid message';
