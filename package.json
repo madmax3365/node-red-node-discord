@@ -39,6 +39,7 @@
   "main": "dist/index.js",
   "node-red": {
     "nodes": {
+      "role-config": "dist/nodes/role-config.js",
       "connect": "dist/nodes/connect.js",
       "discord-get-messages": "dist/nodes/get-messages.js",
       "discord-get-emoji-reactions": "dist/nodes/get-emoji-reactions.js",

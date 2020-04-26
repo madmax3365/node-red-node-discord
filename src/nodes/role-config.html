@@ -1,0 +1,27 @@
+<script type="text/javascript">
+	RED.nodes.registerType('discord-role', {
+		category: 'config',
+		defaults: {
+			name: { value: '', required: true },
+        },
+		credentials: {
+		    roleId: { type: 'text' },
+        },
+		exportable: false,
+		label: function() {
+			return this.name;
+		},
+	});
+</script>
+
+<script type="text/x-red" data-template-name="discord-role">
+	<div class="form-row">
+	    <label for="node-config-input-roleId"><i class="icon-bookmark"></i> RoleID</label>
+	    <input type="text" id="node-config-input-roleId">
+	    <p>You can find the Discord RoleID by right clicking the role and selecting "Copy ID" in Discord (Dev Mode Enabled).</p>
+	</div>
+	<div class="form-row">
+	    <label for="node-config-input-name"><i class="icon-tag"></i>Role Name</label>
+	    <input type="text" id="node-config-input-name">
+	</div>
+</script>

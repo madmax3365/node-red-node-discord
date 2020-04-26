@@ -4,6 +4,7 @@ import {
   IBot,
   IConnectConfig,
   IMessageReaction,
+  IRoleConfig,
   IShouldAssignRoleConfig,
   IShouldAssignRoleResponse,
 } from '../lib/interfaces';
@@ -16,13 +17,20 @@ export = (RED: Red) => {
     RED.nodes.createNode(this, props);
     const configNode = RED.nodes.getNode(props.token) as IConnectConfig;
     const { token } = configNode;
+
+    const reviewerRoleNode = RED.nodes.getNode(
+      props.reviewerRole,
+    ) as IRoleConfig;
+    const reviewerRoleId = reviewerRoleNode.roleId;
+
+    const roleNode = RED.nodes.getNode(props.role) as IRoleConfig;
+    const roleIdToAssign = roleNode.roleId;
+
     const node = this;
     const botInstance = new Bot();
     // @ts-ignore
     this.on('input', (msg: IMessageReaction, send, done) => {
       node.status({ fill: 'green', shape: 'dot', text: 'ready' });
-      const reviewerRoleId = props.reviewer;
-      const roleIdToAssign = props.role;
       const serverId = props.serverId;
       const reactionUser = msg.reactionUser;
       const msgid = RED.util.generateId();

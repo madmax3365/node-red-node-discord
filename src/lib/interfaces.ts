@@ -21,15 +21,26 @@ export interface IConnectConfig extends Node {
   token?: string;
 }
 
+export interface IRoleConfig extends Node {
+  credentials: {
+    roleId: string;
+  };
+  roleId: string;
+}
+
 export interface IDiscordChannelConfig extends Node {
   token: string;
   channels: string;
 }
 
+export interface IAssignRoleConfig extends Node {
+  token: string;
+}
+
 export interface IShouldAssignRoleConfig extends Node {
   token: string;
   role: string;
-  reviewer: string;
+  reviewerRole: string;
   serverId: string;
 }
 
