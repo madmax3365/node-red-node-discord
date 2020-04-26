@@ -4,7 +4,7 @@
     "type": "git",
     "url": "git+https://github.com/MetaFam/node-red-node-discord.git"
   },
-  "version": "2.3.0",
+  "version": "2.3.2",
   "scripts": {
     "build": "npm run copyHtml && npm run copyIcons && tsc ",
     "copyHtml": "mkdir -p dist/nodes/ && cp -a src/nodes/*.html dist/nodes/",
