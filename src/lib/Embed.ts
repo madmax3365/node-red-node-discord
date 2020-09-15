@@ -1,7 +1,7 @@
 import { IRichEmbedArgs } from './interfaces';
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
-export function Embed(args: IRichEmbedArgs): RichEmbed {
+export function Embed(args: IRichEmbedArgs): MessageEmbed {
   const {
     title,
     description,
@@ -15,7 +15,7 @@ export function Embed(args: IRichEmbedArgs): RichEmbed {
     field,
     fields,
   } = args;
-  const result = new RichEmbed().setAuthor(
+  const result = new MessageEmbed().setAuthor(
     author.name,
     author.icon,
     author.url,
@@ -45,7 +45,7 @@ export function Embed(args: IRichEmbedArgs): RichEmbed {
     result.addField(field.name, field.value, field.inline);
   }
   if (fields) {
-    result.fields = fields;
+    result.addFields(fields);
   }
   if (attachments) {
     result.attachFiles(attachments);

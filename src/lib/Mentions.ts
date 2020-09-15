@@ -57,7 +57,7 @@ export class Mentions {
         result.push({ id: mention, name: mention });
       } else {
         const id = matches[1];
-        const user = this.bot.users.get(id);
+        const user = this.bot.users.resolve(id);
         if (user) {
           result.push({ id: mention, name: user.username });
         } else {
@@ -90,7 +90,7 @@ export class Mentions {
     }
     mentions.forEach((mention: string) => {
       const name = mention.replace('@', '');
-      const user = this.bot.users.find(
+      const user = this.bot.users.cache.find(
         (discordUser: User) => discordUser.username === name,
       );
       if (user) {

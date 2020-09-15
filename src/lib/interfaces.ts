@@ -1,17 +1,17 @@
 import {
-  Attachment,
+  MessageAttachment,
   Client,
   ColorResolvable,
   DMChannel,
-  GroupDMChannel,
   GuildMember,
   Message,
   MessageReaction,
   PermissionString,
   TextChannel,
   User,
+  NewsChannel,
 } from 'discord.js';
-import { Node, NodeProperties } from 'node-red';
+import { Node, NodeDef, NodeMessage } from 'node-red';
 import { Stream } from 'stream';
 
 export interface IConnectConfig extends Node {
@@ -21,12 +21,12 @@ export interface IConnectConfig extends Node {
   token?: string;
 }
 
-export interface IDiscordChannelConfig extends Node {
+export interface IDiscordChannelConfig extends NodeDef {
   token: string;
   channels: string;
 }
 
-export interface ISendMessageProps extends NodeProperties {
+export interface ISendMessageProps extends NodeDef {
   token: string;
   channel: string;
 }
@@ -40,21 +40,21 @@ export interface ICallback {
   listener: (param: any) => void;
 }
 
-export type NamedChannel = TextChannel | GroupDMChannel;
+export type NamedChannel = TextChannel;
 
 export interface IFromDiscordMsg {
   _msgid: string;
   payload: string;
-  channel: NamedChannel | DMChannel;
+  channel: NamedChannel | DMChannel | NewsChannel;
   author: User;
-  member: GuildMember;
+  member: GuildMember | null;
   memberRoleNames: string[] | null;
   attachments?: IFile[];
   rawData?: Message;
 }
 
 export interface IFile {
-  filename: string;
+  filename?: string | undefined;
   href: string;
 }
 
@@ -63,7 +63,7 @@ export interface IAttachment {
   file: string | Buffer | Stream;
 }
 
-export interface IToDiscordChannel {
+export interface IToDiscordChannel extends NodeMessage {
   channel?: string;
   payload: string;
   rich?: IRichEmbedArgs;
@@ -92,7 +92,7 @@ export interface IRichEmbedArgs {
     url?: string;
   };
 
-  attachments?: Attachment[];
+  attachments?: MessageAttachment[];
   field?: IRichEmbedField;
   fields?: IRichEmbedField[];
 }
@@ -122,7 +122,7 @@ export interface IMetricRoleItem {
 export interface IMetricMemberItem {
   id: string;
   username: string;
-  joinedDate: Date;
+  joinedDate: Date | null;
   permissions: PermissionString[];
   roles: IMetricRoleItem[];
 }
