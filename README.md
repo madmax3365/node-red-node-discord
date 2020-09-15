@@ -1,3 +1,22 @@
+# Version 3
+
+Soo, I think it's time to start updating ( much more rewriting I guess ... ) this repo. 
+
+Please **Note** that this branch is in **WIP** status, and using it can lead to unpredictable problems.
+The branch is under active development and it's containing breaking changes. 
+I'll provide full `changelog` with release.
+
+## Milestone goals
+- [x] Just update all dependencies and try get all up and running as before
+- [ ] Add `CHANGELOG`
+- [ ] Fix reported bugs from issues
+- [ ] Rewrite / redesign modul's `lib` part  
+- [ ] Use bundler ( `Rollup` || `Webpack` ) for tree shaking and minimize bundle size
+- [ ] Add more clear documentation and provide examples with flows [#13](/../../issues/13)
+- [ ] Provide full `CRUD` operations on message sent by bot [#12](/../../issues/12)
+- [ ] Add functionality to mention roles [#16](/../../issues/16)
+
+
 # node-red-node-discord
 Inspired by [node-red-contrib-discord](https://github.com/jorisvddonk/node-red-contrib-discord)
 
