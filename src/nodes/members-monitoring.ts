@@ -1,4 +1,4 @@
-import { Node, Red } from 'node-red';
+import { Node, NodeInitializer } from 'node-red';
 import { Bot } from '../lib/Bot';
 import {
   IBot,
@@ -9,8 +9,8 @@ import {
 import { MemberMonitor } from '../lib/MemberMonitor';
 
 // TODO: Add more user options
-export = (RED: Red) => {
-  RED.nodes.registerType('discord-monitor-members', function(
+const nodeInit: NodeInitializer = (RED): void => {
+  RED.nodes.registerType('discord-monitor-members', function (
     this: Node,
     props: IDiscordChannelConfig,
   ) {
@@ -23,9 +23,11 @@ export = (RED: Red) => {
       botInstance
         .get(token)
         .then((bot: IBot) => {
-          node.on('input', (msg: IToDiscordChannel) => {
+          node.addListener('input', (msg: IToDiscordChannel) => {
             const monitor = new MemberMonitor(bot);
-            node.send({ monitoringData: monitor.textChannelMetric, ...msg });
+            node.send({
+              payload: { monitoringData: monitor.textChannelMetric, ...msg },
+            });
           });
         })
         .catch((err) => node.error(err));
@@ -34,3 +36,5 @@ export = (RED: Red) => {
     }
   });
 };
+
+export = nodeInit;

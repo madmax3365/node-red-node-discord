@@ -1,5 +1,5 @@
 import { MessageReaction, Role, User } from 'discord.js';
-import { Node, Red } from 'node-red';
+import { Node, NodeInitializer } from 'node-red';
 
 import { Bot } from '../lib/Bot';
 import {
@@ -12,8 +12,8 @@ import {
 } from '../lib/interfaces';
 import { Reactions } from '../lib/Reactions';
 
-export = (RED: Red) => {
-  RED.nodes.registerType('discord-get-emoji-reactions', function(
+const nodeInit: NodeInitializer = (RED): void => {
+  RED.nodes.registerType('discord-get-emoji-reactions', function (
     this: Node,
     props: IDiscordChannelConfig,
   ) {
@@ -68,7 +68,7 @@ export = (RED: Red) => {
                 msg.author = message.author;
                 msg.member = message.member;
                 msg.memberRoleNames = message.member
-                  ? message.member.roles.array().map((item: Role) => {
+                  ? message.member.roles.cache.array().map((item: Role) => {
                       return item.name;
                     })
                   : null;
@@ -90,7 +90,7 @@ export = (RED: Red) => {
         })
         .catch((err: Error) => {
           node.error(err);
-          node.send(configNode);
+          node.send({ payload: { token } });
           node.status({ fill: 'red', shape: 'dot', text: 'wrong token?' });
         });
     } else {
@@ -98,3 +98,5 @@ export = (RED: Red) => {
     }
   });
 };
+
+export = nodeInit;

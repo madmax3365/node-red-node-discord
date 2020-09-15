@@ -1,9 +1,9 @@
-import { Attachment, Channel, RichEmbed } from 'discord.js';
+import { MessageAttachment, Channel, MessageEmbed } from 'discord.js';
 import { Bot } from '../lib/Bot';
 import { Embed } from '../lib/Embed';
 import { isEmbed, isNamedChannel } from '../lib/utils';
 import { Mentions } from '../lib/Mentions';
-import { Node, Red } from 'node-red';
+import { Node, NodeInitializer, NodeMessage } from 'node-red';
 
 import {
   IBot,
@@ -12,8 +12,8 @@ import {
   IToDiscordChannel,
 } from '../lib/interfaces';
 
-export = (RED: Red) => {
-  RED.nodes.registerType('discord-send-messages', function(
+const nodeInit: NodeInitializer = (RED): void => {
+  RED.nodes.registerType('discord-send-messages', function (
     this: Node,
     config: ISendMessageProps,
   ) {
@@ -26,28 +26,31 @@ export = (RED: Red) => {
       botInstance
         .get(token)
         .then((bot: IBot) => {
-          node.on('input', (msg: IToDiscordChannel) => {
+          node.on('input', (_msg: NodeMessage): void => {
+            const msg = _msg as IToDiscordChannel;
             const channel = msg.channel || config.channel;
             if (channel) {
-              let channelInstance;
+              let channelInstance: Channel | undefined | null;
               if (isNaN(parseInt(channel, 10))) {
-                channelInstance = bot.channels.find((instance: Channel) => {
-                  if (isNamedChannel(instance)) {
-                    return instance.name === channel;
-                  }
-                  return false;
-                });
+                channelInstance = bot.channels.cache.find(
+                  (instance: Channel) => {
+                    if (isNamedChannel(instance)) {
+                      return instance.name === channel;
+                    }
+                    return false;
+                  },
+                );
               } else {
-                channelInstance = bot.channels.get(channel);
+                channelInstance = bot.channels.resolve(channel);
               }
               if (channelInstance && isNamedChannel(channelInstance)) {
-                const attachments = [] as Attachment[];
+                const attachments = [] as MessageAttachment[];
                 if (msg.attachments) {
                   msg.attachments.forEach(({ file, name }) => {
-                    attachments.push(new Attachment(file, name));
+                    attachments.push(new MessageAttachment(file, name));
                   });
                 }
-                let outputMessage: string | RichEmbed;
+                let outputMessage: string | MessageEmbed;
                 if (msg.rich) {
                   const { description, fields } = msg.rich;
                   if (description) {
@@ -83,12 +86,11 @@ export = (RED: Red) => {
                   outputMessage = new Mentions(msg.payload, bot)
                     .formattedOutputMessage;
                 }
-                const finalMessage = isEmbed(outputMessage)
-                  ? [outputMessage]
-                  : [outputMessage, { files: attachments }];
-                node.warn(finalMessage.length);
                 channelInstance
-                  .send(...finalMessage)
+                  .send(
+                    outputMessage,
+                    isEmbed(outputMessage) ? { files: attachments } : {},
+                  )
                   .then(() => {
                     node.status({
                       fill: 'green',
@@ -123,3 +125,5 @@ export = (RED: Red) => {
     }
   });
 };
+
+export = nodeInit;
