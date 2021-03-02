@@ -27,7 +27,10 @@ export class MentionsHandler implements DiscordHandler {
     return res;
   }
 
-  public toDiscord(msg: string): string {
+  public toDiscord(msg: string | null): string | null {
+    if (!msg) {
+      return msg;
+    }
     let res = msg;
     if (res.length > 0) {
       const mentions = this.extractNameMentions(msg);

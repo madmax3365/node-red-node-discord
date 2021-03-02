@@ -5,11 +5,6 @@ export interface Bot extends Client {
   refs: number;
 }
 
-export interface NodeEventCallback {
-  event: string;
-  listener: (...params: any[]) => void;
-}
-
 export type UserType = 'bot' | 'user';
 
 export interface DiscordHandler {
@@ -28,5 +23,7 @@ export interface RedMessage {
 }
 
 export type DiscordChannel = NewsChannel | DMChannel | TextChannel;
+
+export type DiscordChannelType = 'news' | 'dm' | 'text';
 
 export type NodeType = 'discord-get-messages' | 'discord-send-messages';

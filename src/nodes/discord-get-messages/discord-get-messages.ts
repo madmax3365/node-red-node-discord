@@ -10,6 +10,8 @@ import { RedMessage } from '../shared/types';
 import { MentionsHandler } from '../shared/lib/MentionsHandler';
 import { prepareClient } from '../shared/lib/common';
 import { NodeStatusMessage } from '../shared/constants';
+import { extractIds } from '../shared/helpers';
+import { BotHolder } from '../shared/lib/BotHolder';
 
 const nodeInit: NodeInitializer = (RED): void => {
   function DiscordGetMessagesNodeConstructor(
@@ -28,67 +30,76 @@ const nodeInit: NodeInitializer = (RED): void => {
       return;
     }
 
-    const client = prepareClient(this, token);
+    const botHolder = new BotHolder();
 
-    client.on('message', (message) => {
-      const rawChannels = config.channels;
-      let processingDeclined = false;
-      switch (message.channel.type) {
-        case 'dm':
-          processingDeclined = config.dm;
-          break;
-        case 'news':
-          processingDeclined = config.news;
-          break;
-        case 'text':
-          const channels =
-            config.channels.length > 0
-              ? rawChannels
-                  .split('#')
-                  .map((e: string) => e.trim())
-                  .filter((e: string) => e !== '')
-              : [];
-          if (channels.length === 0) {
-            processingDeclined = false;
-          } else {
-            processingDeclined =
-              !channels.includes(message.channel.id) &&
-              !channels.includes(message.channel.name);
+    botHolder
+      .getBot(token)
+      .then((client) => {
+        prepareClient(this, client);
+
+        client.on('message', (message) => {
+          let processingDeclined = false;
+          switch (message.channel.type) {
+            case 'dm':
+              processingDeclined = config.dm;
+              break;
+            case 'news':
+              processingDeclined = config.news;
+              break;
+            case 'text':
+              const channels = extractIds(config.channels);
+              if (channels.length === 0) {
+                processingDeclined = false;
+              } else {
+                processingDeclined =
+                  !channels.includes(message.channel.id) &&
+                  !channels.includes(message.channel.name);
+              }
           }
-      }
 
-      if (
-        processingDeclined ||
-        (message.author.id === client.user?.id && !config.listenItself)
-      ) {
-        this.debug({
-          id: message.id,
-          url: message.url,
-          code: 'NO_CONDITIONS_MET',
-        } as CanceledMessage);
-        return;
-      }
+          if (
+            processingDeclined ||
+            (message.author.id === client.user?.id && !config.listenItself)
+          ) {
+            this.debug({
+              id: message.id,
+              url: message.url,
+              code: 'NO_CONDITIONS_MET',
+            } as CanceledMessage);
+            return;
+          }
 
-      const msg = {
-        payload: message.content,
-        metadata: new DiscordMessage(message),
-      } as RedMessage;
+          const msg = {
+            payload: message.content,
+            metadata: new DiscordMessage(message),
+          } as RedMessage;
 
-      if (!config.mentions) {
-        const mentionsHandler = new MentionsHandler(client);
-        const formattedMessage = mentionsHandler.fromDiscord(msg.payload);
-        if (msg.payload !== formattedMessage) {
-          msg.rawMsg = msg.payload;
-        }
-        msg.payload = formattedMessage;
-        msg.metadata.content = formattedMessage;
-      }
+          if (!config.mentions) {
+            const mentionsHandler = new MentionsHandler(client);
+            const formattedMessage = mentionsHandler.fromDiscord(msg.payload);
+            if (msg.payload !== formattedMessage) {
+              msg.rawMsg = msg.payload;
+            }
+            msg.payload = formattedMessage;
+            msg.metadata.content = formattedMessage;
+          }
 
-      this.send(msg);
-    });
-
+          this.send(msg);
+        });
+      })
+      .catch((e) => {
+        this.error(e);
+        this.status({
+          fill: 'red',
+          shape: 'dot',
+          text:
+            e.name === 'FetchError'
+              ? NodeStatusMessage.CLIENT_NO_CONNECTION
+              : NodeStatusMessage.CLIENT_WRONG_TOKEN,
+        });
+      });
     this.on('close', () => {
-      client.destroy();
+      botHolder.destroy(token);
     });
   }
 
