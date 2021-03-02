@@ -1,10 +1,10 @@
-import { Bot, DiscordHandler, MentionMap } from '../types';
-import { User } from 'discord.js';
+import { DiscordHandler, MentionMap } from '../types';
+import { Client, User } from 'discord.js';
 
 export class MentionsHandler implements DiscordHandler {
-  public bot: Bot;
+  public bot: Client;
 
-  constructor(bot: Bot) {
+  constructor(bot: Client) {
     this.bot = bot;
   }
 

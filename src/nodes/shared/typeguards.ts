@@ -1,5 +1,5 @@
 import { DMChannel, NewsChannel, TextChannel } from 'discord.js';
-import { DiscordChannel } from '../../shared/types';
+import { DiscordChannel } from './types';
 
 export function isDmChannel(channel: DiscordChannel): channel is DMChannel {
   return channel.type === 'dm';

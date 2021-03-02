@@ -1,15 +1,15 @@
 import { NodeInitializer } from 'node-red';
 import {
+  CanceledMessage,
   DiscordGetMessagesNode,
   DiscordGetMessagesNodeDef,
 } from './modules/types';
 import { DiscordTokenNode } from '../discord-token/modules/types';
-import { BotConnector } from '../shared/lib/BotConnector';
-import { BotEventHandler } from '../shared/lib/BotEventHandler';
-import { Message } from 'discord.js';
 import { DiscordMessage } from '../shared/lib/model/DiscordMessage';
 import { RedMessage } from '../shared/types';
 import { MentionsHandler } from '../shared/lib/MentionsHandler';
+import { prepareClient } from '../shared/lib/common';
+import { NodeStatusMessage } from '../shared/constants';
 
 const nodeInit: NodeInitializer = (RED): void => {
   function DiscordGetMessagesNodeConstructor(
@@ -17,90 +17,79 @@ const nodeInit: NodeInitializer = (RED): void => {
     config: DiscordGetMessagesNodeDef,
   ): void {
     RED.nodes.createNode(this, config);
-
     const { token } = RED.nodes.getNode(config.token) as DiscordTokenNode;
 
     if (!token) {
-      this.error('Access token not specified');
+      this.status({
+        fill: 'red',
+        shape: 'dot',
+        text: NodeStatusMessage.CLIENT_NO_TOKEN,
+      });
       return;
     }
 
-    const botConnector = new BotConnector();
+    const client = prepareClient(this, token);
 
-    const rawChannels = config.channels;
+    client.on('message', (message) => {
+      const rawChannels = config.channels;
+      let processingDeclined = false;
+      switch (message.channel.type) {
+        case 'dm':
+          processingDeclined = config.dm;
+          break;
+        case 'news':
+          processingDeclined = config.news;
+          break;
+        case 'text':
+          const channels =
+            config.channels.length > 0
+              ? rawChannels
+                  .split('#')
+                  .map((e: string) => e.trim())
+                  .filter((e: string) => e !== '')
+              : [];
+          if (channels.length === 0) {
+            processingDeclined = false;
+          } else {
+            processingDeclined =
+              !channels.includes(message.channel.id) &&
+              !channels.includes(message.channel.name);
+          }
+      }
 
-    botConnector
-      .get(token)
-      .then((bot) => {
-        this.status({ fill: 'green', shape: 'dot', text: 'ready' });
-        const botEventHandler = new BotEventHandler(bot);
+      if (
+        processingDeclined ||
+        (message.author.id === client.user?.id && !config.listenItself)
+      ) {
+        this.debug({
+          id: message.id,
+          url: message.url,
+          code: 'NO_CONDITIONS_MET',
+        } as CanceledMessage);
+        return;
+      }
 
-        botEventHandler.registerEvent({
-          event: 'message',
-          listener: (message: Message) => {
-            let processingDeclined = false;
-            switch (message.channel.type) {
-              case 'dm':
-                processingDeclined = config.dm;
-                break;
-              case 'news':
-                processingDeclined = config.news;
-                break;
-              case 'text':
-                const channels =
-                  config.channels.length > 0
-                    ? rawChannels
-                        .split('#')
-                        .map((e: string) => e.trim())
-                        .filter((e: string) => e !== '')
-                    : [];
-                if (channels.length === 0) {
-                  processingDeclined = false;
-                } else {
-                  processingDeclined =
-                    !channels.includes(message.channel.id) &&
-                    !channels.includes(message.channel.name);
-                }
-            }
+      const msg = {
+        payload: message.content,
+        metadata: new DiscordMessage(message),
+      } as RedMessage;
 
-            if (processingDeclined || message.author.id === bot.user?.id) {
-              return;
-            }
+      if (!config.mentions) {
+        const mentionsHandler = new MentionsHandler(client);
+        const formattedMessage = mentionsHandler.fromDiscord(msg.payload);
+        if (msg.payload !== formattedMessage) {
+          msg.rawMsg = msg.payload;
+        }
+        msg.payload = formattedMessage;
+        msg.metadata.content = formattedMessage;
+      }
 
-            const msg = {
-              payload: message.content,
-              metadata: new DiscordMessage(message),
-            } as RedMessage;
+      this.send(msg);
+    });
 
-            if (!config.mentions) {
-              const mentionsHandler = new MentionsHandler(bot);
-              const formattedMessage = mentionsHandler.fromDiscord(msg.payload);
-              if (msg.payload !== formattedMessage) {
-                msg.rawMsg = msg.payload;
-              }
-              msg.payload = formattedMessage;
-              msg.metadata.content = formattedMessage;
-            }
-
-            this.send(msg);
-          },
-        });
-
-        botEventHandler.registerEvent({
-          event: 'error',
-          listener: (err: Error) => {
-            this.error(err);
-            this.status({ fill: 'red', shape: 'dot', text: 'error' });
-          },
-        });
-        this.on('close', () => {
-          botEventHandler.destroy();
-        });
-      })
-      .catch((err: Error) => {
-        this.error(err);
-        this.status({ fill: 'red', shape: 'dot', text: 'wrong token?' });
-      });
+    this.on('close', () => {
+      client.destroy();
+    });
   }
 
   RED.nodes.registerType(

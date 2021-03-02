@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { Client, DMChannel, NewsChannel, TextChannel } from 'discord.js';
 import { DiscordMessage } from './lib/model/DiscordMessage';
 
 export interface Bot extends Client {
@@ -13,7 +13,7 @@ export interface NodeEventCallback {
 export type UserType = 'bot' | 'user';
 
 export interface DiscordHandler {
-  bot: Bot;
+  bot: Client;
 }
 
 export interface MentionMap {
@@ -26,3 +26,7 @@ export interface RedMessage {
   rawMsg?: string;
   metadata: DiscordMessage;
 }
+
+export type DiscordChannel = NewsChannel | DMChannel | TextChannel;
+
+export type NodeType = 'discord-get-messages' | 'discord-send-messages';

@@ -16,6 +16,7 @@ RED.nodes.registerType<DiscordGetMessagesEditorNodeProperties>(
       news: { value: false },
       channels: { value: '' },
       mentions: { value: false },
+      listenItself: { value: false },
     },
     inputs: 0,
     outputs: 1,

@@ -10,12 +10,16 @@
     "build:runtime": "tsc -p tsconfig.runtime.json",
     "build:runtime:watch": "tsc -p tsconfig.runtime.watch.json --watch --preserveWatchOutput",
     "build": "rm -rf dist && yarn copy && yarn build:editor && yarn build:runtime",
-    "test": "jest --forceExit --detectOpenHandles --colors",
+    "test": "jest --verbose --forceExit --detectOpenHandles --colors",
     "test:watch": "jest --forceExit --detectOpenHandles --watchAll",
-    "dev": "rm -rf dist && yarn copy && concurrently --kill-others --names 'COPY,EDITOR,RUNTIME,TEST' --prefix '({name})' --prefix-colors 'yellow.bold,cyan.bold,greenBright.bold,magenta.bold' 'onchange -v \"src/**/*.png\" \"src/**/*.svg\" -- yarn copy' 'yarn build:editor:watch' 'yarn build:runtime:watch' 'sleep 10; yarn test:watch'",
+    "dev": "rm -rf dist && yarn copy && concurrently --kill-others --names 'COPY,EDITOR,RUNTIME' --prefix '({name})' --prefix-colors 'yellow.bold,cyan.bold,greenBright.bold,magenta.bold' 'onchange -v \"src/**/*.png\" \"src/**/*.svg\" -- yarn copy' 'yarn build:editor:watch' 'yarn build:runtime:watch'",
     "lint": "prettier --ignore-path .eslintignore --check '**/*.{js,ts,md}'; eslint --ext .js,.ts .",
     "lint:fix": "prettier --ignore-path .eslintignore --write '**/*.{js,ts,md}'; eslint --ext .js,.ts . --fix"
   },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "engineStrict": true,
   "author": "Gago Muradyan",
   "repository": {
     "type": "git",
@@ -24,9 +28,9 @@
   "license": "GPL-2.0",
   "node-red": {
     "nodes": {
-      "transform-text": "./dist/nodes/transform-text/transform-text.js",
       "discord-token": "./dist/nodes/discord-token/discord-token.js",
-      "discord-get-messages": "./dist/nodes/discord-get-messages/discord-get-messages.js"
+      "discord-get-messages": "./dist/nodes/discord-get-messages/discord-get-messages.js",
+      "discord-send-messages": "./dist/nodes/discord-send-messages/discord-send-messages.js"
     }
   },
   "dependencies": {
@@ -44,9 +48,11 @@
     "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
+    "bcrypt": "^5.0.1",
     "colorette": "^1.2.1",
     "concurrently": "^6.0.0",
     "copyfiles": "^2.4.1",
+    "dotenv": "^8.2.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-jest": "^24.1.5",
@@ -63,6 +69,10 @@
     "typescript": "^4.2.2"
   },
   "jest": {
+    "testTimeout": 20000,
+    "setupFiles": [
+      "dotenv/config"
+    ],
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/src"
