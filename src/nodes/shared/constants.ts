@@ -1,5 +1,6 @@
 export const NODE_CATEGORY = 'discord';
 export const NODE_COLOR = '#7289da';
+export const COMMA_SEPARATED_NUMBERS_RE = /^$|^ *\d+ *(?:, *\d+ *)*$/;
 
 export enum NodeStatusMessage {
   CLIENT_READY = 'Ready',
