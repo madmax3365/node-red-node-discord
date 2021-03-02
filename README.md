@@ -1,17 +1,17 @@
 # Version 3
 
-Soo, I think it's time to start updating ( much more rewriting I guess ... ) this repo. 
+Soo, I think it's time to start updating ( much more rewriting I guess ... ) this repo.
 
 Please **Note** that this branch is in **WIP** status, and using it can lead to unpredictable problems.
-The branch is under active development and it's containing breaking changes. 
+The branch is under active development and it's containing breaking changes.
 I'll provide full `changelog` with release.
 
 ## Milestone goals
 - [x] Just update all dependencies and try get all up and running as before
 - [ ] Add `CHANGELOG`
 - [ ] Fix reported bugs from issues
-- [ ] Rewrite / redesign modul's `lib` part  
-- [ ] Use bundler ( `Rollup` || `Webpack` ) for tree shaking and minimize bundle size
+- [x] Rewrite / redesign modul's `lib` part
+- [x] Use bundler ( `Rollup` || `Webpack` ) for tree shaking and minimize bundle size
 - [ ] Add more clear documentation and provide examples with flows [#13](/../../issues/13)
 - [ ] Provide full `CRUD` operations on message sent by bot [#12](/../../issues/12)
 - [ ] Add functionality to mention roles [#16](/../../issues/16)
@@ -41,11 +41,11 @@ node-red-node-discord gives you access to following nodes:
 ## discord-get-messages
 - Triggers whenever a message was received on Discord
 - You can pass list of channels to listen to
-	**Note :** valid channel list example `#1245#general#1234567#another-channel`
+  **Note :** valid channel list example `#1245#general#1234567#another-channel`
 -	`msg.payload` will be set to the textual content of the message
 - `msg.channel` will be set to an Object containing info on the [channel](https://discord.js.org/#/docs/main/stable/class/Channel) the message was received from (does not contain any discord.js functions)
 -	`msg.author` will be set to an Object containing info on the [user](https://discord.js.org/#/docs/main/stable/class/User) that sent the message (does not contain any discord.js functions)
--	`msg.attachments` will be set to `Array` containing attachments info in format 
+-	`msg.attachments` will be set to `Array` containing attachments info in format
   ```typescript
 {
 	filename: string, // Filename
@@ -102,10 +102,10 @@ node-red-node-discord gives you access to following nodes:
      file: string | Buffer | Stream;
   }
   ```
-  
+
   ## discord-members-monitoring
-  - Triggered from outside, for now doesn't provide any configuration options
-  - Set's monitored data to `msg.monitoringData` with following content
+   - Triggered from outside, for now doesn't provide any configuration options
+   - Set's monitored data to `msg.monitoringData` with following content
   ```typescript
   {
   [category: string]: [

@@ -1,4 +1,7 @@
-node_modules
-.DS_Store
-dist
 .idea
+.vscode
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+*.tsbuildinfo
+dist

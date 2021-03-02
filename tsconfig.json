@@ -1,23 +1,35 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"skipLibCheck": true,
-		"target": "es5",
-		"downlevelIteration": true,
-		"noImplicitAny": true,
-		"removeComments": true,
-		"preserveConstEnums": true,
-		"experimentalDecorators": true,
-		"sourceMap": false,
-		"declaration": false,
-		"listFiles": false,
-		"strict": true,
-		"outDir": "./dist/",
-		"rootDir": "./src",
-		"noUnusedLocals": true,
-		"noUnusedParameters": true
-	},
-	"include": ["**/*.ts"],
-	"exclude": ["node_modules/**/*"]
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "commonjs",
+    "lib": ["es2018", "esnext.asynciterable", "dom"],
+    "allowJs": false,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "removeComments": false,
+    "noEmit": false,
+    "importHelpers": false,
+    "preserveWatchOutput": true,
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "preserveConstEnums": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "typeRoots": ["./src/types", "./node_modules/@types"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
