@@ -1,6 +1,10 @@
 import { EditorRED } from 'node-red';
 import { DiscordSendMessagesEditorNodeProperties } from './modules/types';
-import { NODE_CATEGORY, NODE_COLOR } from '../../shared/constants';
+import {
+  COMMA_SEPARATED_NUMBERS_RE,
+  NODE_CATEGORY,
+  NODE_COLOR,
+} from '../../shared/constants';
 
 declare const RED: EditorRED;
 
@@ -12,7 +16,14 @@ RED.nodes.registerType<DiscordSendMessagesEditorNodeProperties>(
     defaults: {
       name: { value: '' },
       token: { value: '', type: 'discord-token', required: true },
-      channel: { value: '' },
+      dm: {
+        value: '',
+        validate: RED.validators.regex(COMMA_SEPARATED_NUMBERS_RE),
+      },
+      channel: {
+        value: '',
+        validate: RED.validators.regex(COMMA_SEPARATED_NUMBERS_RE),
+      },
     },
     inputs: 1,
     outputs: 0,
