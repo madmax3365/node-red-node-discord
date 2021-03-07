@@ -8,4 +8,9 @@ export enum NodeStatusMessage {
   CLIENT_NO_TOKEN = 'Access token not specified',
   CLIENT_WRONG_TOKEN = 'Wrong access token',
   CLIENT_ERROR_UNKNOWN = 'Unknown error',
+  CLIENT_EMPTY_MESSAGE = `Can't send empty message`,
+  CLIENT_NO_CHANNEL = 'No channel specified',
+  CLIENT_CONNECTING = 'Authorizing ...',
+  CLIENT_ERROR_CHANNEL_UNKNOWN = `Can't resolve channel with id`,
+  CLIENT_MESSAGE_SUCCESS = 'Message sent successfully',
 }

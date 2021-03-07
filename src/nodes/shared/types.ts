@@ -1,5 +1,6 @@
 import { Client, DMChannel, NewsChannel, TextChannel } from 'discord.js';
 import { DiscordMessage } from './lib/model/DiscordMessage';
+import { NodeMessageInFlow } from 'node-red';
 
 export interface Bot extends Client {
   refs: number;
@@ -16,7 +17,7 @@ export interface MentionMap {
   name: string;
 }
 
-export interface RedMessage {
+export interface RedMessage extends NodeMessageInFlow {
   payload: string;
   rawMsg?: string;
   metadata: DiscordMessage;

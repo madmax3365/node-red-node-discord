@@ -6,6 +6,7 @@ export class RichMessage extends MessageEmbed {
   constructor(data: RichEmbedArgs, client: Client) {
     super();
     const mh = new MentionsHandler(client);
+    this.type = data.type;
     this.setTitle(mh.toDiscord(data.title ?? null))
       .setDescription(mh.toDiscord(data.description ?? null))
       .setTimestamp(data.timestamp)
@@ -23,6 +24,10 @@ export class RichMessage extends MessageEmbed {
     }
     if (data.color) {
       this.setColor(data.color);
+    }
+
+    if (data.provider) {
+      this.provider = data.provider;
     }
 
     if (data.footer) {

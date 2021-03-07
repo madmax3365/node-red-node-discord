@@ -51,19 +51,25 @@ export class BaseNodeTestHelper {
     });
   };
 
-  public shouldRejectWrongToken = (done: DoneCallback): void => {
+  public shouldRejectWrongToken = (
+    done: DoneCallback,
+    simulateInput?: boolean,
+  ): void => {
     const flows: Flows = [
       { ...this.baseTokenFlowItem, token: 'Wrong token' },
       { ...this.baseTestedFlowItem, token: this.baseTokenFlowItem.id },
     ];
 
     testHelper.load(this.nodes, flows, () => {
-      testHelper
-        .getNode(this.baseTestedFlowItem.id)
-        .addListener('call:status', (call: SinonSpyCall) => {
-          expect(call.firstArg.text).toBe(NodeStatusMessage.CLIENT_WRONG_TOKEN);
-          done();
-        });
+      const testedNode = testHelper.getNode(this.baseTestedFlowItem.id);
+      if (simulateInput) {
+        testedNode.receive({});
+      }
+
+      testedNode.addListener('call:status', (call: SinonSpyCall) => {
+        expect(call.firstArg.text).toBe(NodeStatusMessage.CLIENT_WRONG_TOKEN);
+        done();
+      });
     });
   };
 
@@ -77,6 +83,7 @@ export class BaseNodeTestHelper {
       testHelper
         .getNode(this.baseTestedFlowItem.id)
         .addListener('call:status', (call: SinonSpyCall) => {
+          console.log(call.firstArg);
           expect(call.firstArg.text).toBe(NodeStatusMessage.CLIENT_READY);
           done();
         });

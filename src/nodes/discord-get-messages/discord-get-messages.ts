@@ -12,6 +12,8 @@ import { prepareClient } from '../shared/lib/common';
 import { NodeStatusMessage } from '../shared/constants';
 import { extractIds } from '../shared/helpers';
 import { BotHolder } from '../shared/lib/BotHolder';
+import { isDmChannel } from '../shared/typeguards';
+import { Guild } from 'discord.js';
 
 const nodeInit: NodeInitializer = (RED): void => {
   function DiscordGetMessagesNodeConstructor(
@@ -75,16 +77,26 @@ const nodeInit: NodeInitializer = (RED): void => {
           } as RedMessage;
 
           if (!config.mentions) {
-            const mentionsHandler = new MentionsHandler(client);
-            const formattedMessage = mentionsHandler.fromDiscord(msg.payload);
-            if (msg.payload !== formattedMessage) {
-              msg.rawMsg = msg.payload;
-            }
-            msg.payload = formattedMessage;
-            msg.metadata.content = formattedMessage;
-          }
+            const guild = (isDmChannel(message.channel)
+              ? message.guild
+              : message.channel.guild) as Guild;
+            const mentionsHandler = new MentionsHandler(guild);
+            const formattedMessage = msg.payload;
 
-          this.send(msg);
+            mentionsHandler
+              .handleAll(formattedMessage, 'discord')
+              .then((finalMsg) => {
+                if (msg.payload !== finalMsg) {
+                  msg.rawMsg = msg.payload;
+                }
+
+                msg.payload = finalMsg;
+                msg.metadata.content = finalMsg;
+                this.send(msg);
+              });
+          } else {
+            this.send(msg);
+          }
         });
       })
       .catch((e) => {

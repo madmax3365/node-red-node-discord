@@ -4,5 +4,4 @@ export interface DiscordGetMessagesOptions {
   news: boolean;
   channels: string;
   mentions: boolean;
-  listenItself: boolean;
 }
