@@ -59,10 +59,7 @@ const nodeInit: NodeInitializer = (RED): void => {
               }
           }
 
-          if (
-            processingDeclined ||
-            (message.author.id === client.user?.id && !config.listenItself)
-          ) {
+          if (processingDeclined || message.author.id === client.user?.id) {
             this.debug({
               id: message.id,
               url: message.url,
