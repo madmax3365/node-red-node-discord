@@ -44,7 +44,7 @@ export interface RichEmbedArgs {
   url?: string;
   type: EmbedType;
   color?: ColorResolvable;
-  timestamp?: number | Date;
+  timestamp?: number;
   footer?: {
     icon?: string;
     text: string;
