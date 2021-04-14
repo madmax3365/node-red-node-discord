@@ -83,7 +83,6 @@ export class BaseNodeTestHelper {
       testHelper
         .getNode(this.baseTestedFlowItem.id)
         .addListener('call:status', (call: SinonSpyCall) => {
-          console.log(call.firstArg);
           expect(call.firstArg.text).toBe(NodeStatusMessage.CLIENT_READY);
           done();
         });

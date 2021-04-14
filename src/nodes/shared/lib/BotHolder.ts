@@ -10,7 +10,9 @@ export class BotHolder {
       bot.refs++;
       return bot;
     }
-    const newBot = new Client() as Bot;
+    const newBot = new Client({
+      partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+    }) as Bot;
     newBot.refs = 0;
     await newBot.login(token);
     this.bots.set(token, newBot);

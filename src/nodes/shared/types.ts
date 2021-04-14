@@ -8,19 +8,15 @@ export interface Bot extends Client {
 
 export type UserType = 'bot' | 'user';
 
-export interface DiscordHandler {
-  bot: Client;
+export interface DiscordReaction {
+  message: DiscordMessage;
 }
 
-export interface MentionMap {
-  id: string;
-  name: string;
-}
-
-export interface RedMessage extends NodeMessageInFlow {
-  payload: string;
-  rawMsg?: string;
-  metadata: DiscordMessage;
+export interface RedMessage<T extends DiscordMessage | DiscordReaction>
+  extends NodeMessageInFlow {
+  payload?: string;
+  metadata: T;
+  type: 'reaction' | 'message';
 }
 
 export type DiscordChannel = NewsChannel | DMChannel | TextChannel;
@@ -28,3 +24,5 @@ export type DiscordChannel = NewsChannel | DMChannel | TextChannel;
 export type DiscordChannelType = 'news' | 'dm' | 'text';
 
 export type NodeType = 'discord-get-messages' | 'discord-send-messages';
+
+export type DiscordReactionEventType = 'add' | 'remove';

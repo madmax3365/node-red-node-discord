@@ -1,16 +1,16 @@
 import { UserType } from '../../types';
-import { User } from 'discord.js';
+import { PartialUser, User } from 'discord.js';
 
 export class DiscordUser {
   public id: string;
-  public username: string;
+  public username: string | null;
   public avatar: string | null;
-  public defaultAvatarURL: string;
+  public defaultAvatarURL: string | null;
   public type: UserType;
   public createdAt: string;
   public locale: string | null;
 
-  constructor(user: User) {
+  constructor(user: User | PartialUser) {
     this.id = user.id;
     this.username = user.username;
     this.avatar = user.avatar;

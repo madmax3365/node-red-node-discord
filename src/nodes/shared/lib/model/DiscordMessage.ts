@@ -12,6 +12,7 @@ export class DiscordMessage {
   public type?: MessageType;
   public pinned: boolean;
   public attachments: DiscordAttachment[];
+  public raw?: string;
 
   constructor(message: Message) {
     this.id = message.id;

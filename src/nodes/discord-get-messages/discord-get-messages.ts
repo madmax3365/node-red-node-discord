@@ -10,10 +10,11 @@ import { RedMessage } from '../shared/types';
 import { MentionsHandler } from '../shared/lib/MentionsHandler';
 import { prepareClient } from '../shared/lib/common';
 import { NodeStatusMessage } from '../shared/constants';
-import { extractIds } from '../shared/helpers';
 import { BotHolder } from '../shared/lib/BotHolder';
 import { isDmChannel } from '../shared/typeguards';
-import { Guild } from 'discord.js';
+import { Guild, MessageReaction } from 'discord.js';
+import { isProcessingDeclined } from './modules/helpers';
+import { DiscordReaction } from '../shared/lib/model/DiscordReaction';
 
 const nodeInit: NodeInitializer = (RED): void => {
   function DiscordGetMessagesNodeConstructor(
@@ -39,27 +40,72 @@ const nodeInit: NodeInitializer = (RED): void => {
       .then((client) => {
         prepareClient(this, client);
 
-        client.on('message', (message) => {
-          let processingDeclined = false;
-          switch (message.channel.type) {
-            case 'dm':
-              processingDeclined = config.dm;
-              break;
-            case 'news':
-              processingDeclined = config.news;
-              break;
-            case 'text':
-              const channels = extractIds(config.channels);
-              if (channels.length === 0) {
-                processingDeclined = false;
-              } else {
-                processingDeclined =
-                  !channels.includes(message.channel.id) &&
-                  !channels.includes(message.channel.name);
-              }
-          }
+        if (config.reactions) {
+          client.on('messageReactionAdd', async (reaction, user) => {
+            if (isProcessingDeclined(reaction.message.channel, config)) {
+              this.debug({
+                id: reaction.message.id,
+                url: reaction.message.url,
+                code: 'NO_CONDITIONS_MET',
+              } as CanceledMessage);
+              return;
+            }
 
-          if (processingDeclined || message.author.id === client.user?.id) {
+            if (reaction.partial) {
+              try {
+                await reaction.fetch();
+              } catch (error) {
+                this.error(
+                  'Something went wrong when fetching the reaction: ',
+                  error,
+                );
+                return;
+              }
+            }
+
+            const msg = {
+              metadata: new DiscordReaction(reaction, user, 'add'),
+              type: 'reaction',
+            } as RedMessage<DiscordReaction>;
+
+            this.send(await resolveMentionsInReactions(reaction, msg));
+          });
+
+          client.on('messageReactionRemove', async (reaction, user) => {
+            if (isProcessingDeclined(reaction.message.channel, config)) {
+              this.debug({
+                id: reaction.message.id,
+                url: reaction.message.url,
+                code: 'NO_CONDITIONS_MET',
+              } as CanceledMessage);
+              return;
+            }
+
+            if (reaction.partial) {
+              try {
+                await reaction.fetch();
+              } catch (error) {
+                this.error(
+                  'Something went wrong when fetching the reaction: ',
+                  error,
+                );
+                return;
+              }
+            }
+
+            const msg = {
+              metadata: new DiscordReaction(reaction, user, 'remove'),
+              type: 'reaction',
+            } as RedMessage<DiscordReaction>;
+            this.send(await resolveMentionsInReactions(reaction, msg));
+          });
+        }
+
+        client.on('message', (message) => {
+          if (
+            isProcessingDeclined(message.channel, config) ||
+            message.author.id === client.user?.id
+          ) {
             this.debug({
               id: message.id,
               url: message.url,
@@ -69,9 +115,9 @@ const nodeInit: NodeInitializer = (RED): void => {
           }
 
           const msg = {
-            payload: message.content,
             metadata: new DiscordMessage(message),
-          } as RedMessage;
+            type: 'message',
+          } as RedMessage<DiscordMessage>;
 
           if (!config.mentions) {
             const guild = (isDmChannel(message.channel)
@@ -84,11 +130,11 @@ const nodeInit: NodeInitializer = (RED): void => {
               .handleAll(formattedMessage, 'discord')
               .then((finalMsg) => {
                 if (msg.payload !== finalMsg) {
-                  msg.rawMsg = msg.payload;
+                  msg.metadata.raw = msg.payload;
                 }
 
                 msg.payload = finalMsg;
-                msg.metadata.content = finalMsg;
+                msg.metadata.content = finalMsg || '';
                 this.send(msg);
               });
           } else {
@@ -110,6 +156,28 @@ const nodeInit: NodeInitializer = (RED): void => {
     this.on('close', () => {
       botHolder.destroy(token);
     });
+
+    async function resolveMentionsInReactions(
+      reaction: MessageReaction,
+      msg: RedMessage<DiscordReaction>,
+    ): Promise<RedMessage<DiscordReaction>> {
+      const res = msg;
+      if (config.mentions) {
+        return res;
+      }
+
+      const guild = (isDmChannel(reaction.message.channel)
+        ? reaction.message.guild
+        : reaction.message.channel.guild) as Guild;
+      const mentionsHandler = new MentionsHandler(guild);
+      const rawMsg = res.metadata.message.content;
+      const resolvedMsg = await mentionsHandler.handleAll(rawMsg, 'discord');
+      res.metadata.message.content = resolvedMsg;
+      if (resolvedMsg !== rawMsg) {
+        res.metadata.message.raw = rawMsg;
+      }
+      return res;
+    }
   }
 
   RED.nodes.registerType(
