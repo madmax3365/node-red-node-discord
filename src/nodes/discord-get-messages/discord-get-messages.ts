@@ -101,7 +101,7 @@ const nodeInit: NodeInitializer = (RED): void => {
           });
         }
 
-        client.on('message', (message) => {
+        client.on('message', async (message) => {
           if (
             isProcessingDeclined(message.channel, config) ||
             message.author.id === client.user?.id
@@ -114,6 +114,18 @@ const nodeInit: NodeInitializer = (RED): void => {
             return;
           }
 
+          if (message.partial) {
+            try {
+              await message.fetch();
+            } catch (error) {
+              this.error(
+                'Something went wrong when fetching the message: ',
+                error,
+              );
+              return;
+            }
+          }
+
           const msg = {
             metadata: new DiscordMessage(message),
             type: 'message',
@@ -124,19 +136,15 @@ const nodeInit: NodeInitializer = (RED): void => {
               ? message.guild
               : message.channel.guild) as Guild;
             const mentionsHandler = new MentionsHandler(guild);
-            const formattedMessage = msg.payload;
+            const rawMsg = message.content;
+            const finalMsg = await mentionsHandler.handleAll(rawMsg, 'discord');
+            if (rawMsg !== finalMsg) {
+              msg.metadata.raw = rawMsg;
+            }
 
-            mentionsHandler
-              .handleAll(formattedMessage, 'discord')
-              .then((finalMsg) => {
-                if (msg.payload !== finalMsg) {
-                  msg.metadata.raw = msg.payload;
-                }
-
-                msg.payload = finalMsg;
-                msg.metadata.content = finalMsg || '';
-                this.send(msg);
-              });
+            msg.payload = finalMsg;
+            msg.metadata.content = finalMsg as string;
+            this.send(msg);
           } else {
             this.send(msg);
           }
