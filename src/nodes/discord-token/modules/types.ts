@@ -3,6 +3,6 @@ import { DiscordTokenOptions } from '../shared/types';
 
 export interface DiscordTokenNodeDef extends NodeDef, DiscordTokenOptions {}
 
-export interface DiscordTokenNode extends Node {
+export interface DiscordTokenNode extends Node<{ token: string }> {
   token: string;
 }

@@ -1,6 +1,8 @@
-import { EditorNodeProperties } from 'node-red';
+import { EditorNodeProperties, NodeCredential } from 'node-red';
 import { DiscordTokenOptions } from '../../shared/types';
 
-export interface DiscordTokenEditorNodeProperties
-  extends EditorNodeProperties,
-    DiscordTokenOptions {}
+export type DiscordTokenEditorNodeProperties = EditorNodeProperties;
+
+export interface DiscordTokenNodeCredentials {
+  token: NodeCredential;
+}

@@ -1,3 +1,1 @@
-export interface DiscordTokenOptions {
-  token: string;
-}
+export interface DiscordTokenOptions {}

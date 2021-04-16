@@ -8,10 +8,12 @@ const nodeInit: NodeInitializer = (RED): void => {
   ): void {
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.token = config.token;
+    this.token = this.credentials.token;
   }
 
-  RED.nodes.registerType('discord-token', DiscordTokenNodeConstructor);
+  RED.nodes.registerType('discord-token', DiscordTokenNodeConstructor, {
+    credentials: { token: { type: 'text' } },
+  });
 };
 
 export = nodeInit;
