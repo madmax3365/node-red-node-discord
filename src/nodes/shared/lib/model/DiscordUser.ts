@@ -4,6 +4,7 @@ import { PartialUser, User } from 'discord.js';
 export class DiscordUser {
   public id: string;
   public username: string | null;
+  public tag: string | null;
   public avatar: string | null;
   public defaultAvatarURL: string | null;
   public type: UserType;
@@ -13,6 +14,7 @@ export class DiscordUser {
   constructor(user: User | PartialUser) {
     this.id = user.id;
     this.username = user.username;
+    this.tag = user.tag;
     this.avatar = user.avatar;
     this.defaultAvatarURL = user.defaultAvatarURL;
     this.type = user.bot ? 'bot' : 'user';
